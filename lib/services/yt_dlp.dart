@@ -58,6 +58,22 @@ class YtDlp {
     int quality, {
     required void Function(double) onProgress,
   }) async {
+    // YouTube intermittently answers 403 on stream URLs (no PO token); a fresh extraction usually succeeds.
+    for (var attempt = 1;; attempt++) {
+      try {
+        return await _downloadOnce(url, format, quality, onProgress);
+      } on YtDlpException catch (e) {
+        if (attempt == 3 || !e.stderr.contains('HTTP Error 403')) rethrow;
+      }
+    }
+  }
+
+  static Future<String> _downloadOnce(
+    String url,
+    OutputFormat format,
+    int quality,
+    void Function(double) onProgress,
+  ) async {
     final process = await Process.start(
       _ytDlp,
       [
