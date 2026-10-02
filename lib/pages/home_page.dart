@@ -67,6 +67,14 @@ class _HomePageState extends State<HomePage> {
       final path = await YtDlp.download(_info!.url, _format, _quality,
           onProgress: (p) => setState(() => _progress = p));
       setState(() => _savedPath = path);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        behavior: SnackBarBehavior.floating,
+        width: 560,
+        duration: const Duration(seconds: 8),
+        content: const Text('Download concluído! O arquivo está na pasta Downloads.'),
+        action: SnackBarAction(label: 'Abrir', onPressed: () => YtDlp.open(path)),
+      ));
     });
     setState(() => _progress = null);
   }
@@ -125,10 +133,13 @@ class _HomePageState extends State<HomePage> {
                   leading: const Icon(Icons.check_circle, color: Colors.green),
                   title: const Text('Download concluído'),
                   subtitle: Text(_savedPath!),
-                  trailing: TextButton(
-                    onPressed: () => YtDlp.showInFolder(_savedPath!),
-                    child: const Text('Mostrar na pasta'),
-                  ),
+                  trailing: Wrap(spacing: 8, children: [
+                    TextButton(onPressed: () => YtDlp.open(_savedPath!), child: const Text('Abrir')),
+                    TextButton(
+                      onPressed: () => YtDlp.showInFolder(_savedPath!),
+                      child: const Text('Mostrar na pasta'),
+                    ),
+                  ]),
                 ),
               ],
             ],

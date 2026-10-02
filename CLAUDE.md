@@ -31,7 +31,7 @@ flutter test test/yt_dlp_test.dart --name parsePercent   # single test
   - Files are saved to `%USERPROFILE%\Downloads`.
 - UI follows Atomic Design: `lib/components/molecules/*` are stateless and prop-driven. `lib/pages/home_page.dart` owns all state (fetch → preview → pick format → download → "Mostrar na pasta").
 - The app icon (`windows/runner/resources/app_icon.ico`) is an original design; never use the YouTube logo.
-- Output is forced to UTF-8 with the `PYTHONUTF8` environment variable, so non-ASCII titles and paths decode correctly.
+- yt-dlp is always called with `--encoding utf-8`; otherwise it prints in the Windows ANSI codepage and accented titles break UTF-8 decoding (`FormatException`).
 
 ## GitHub account (mandatory)
 

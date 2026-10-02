@@ -13,7 +13,6 @@ class YtDlp {
   static final _binDir = '${File(Platform.resolvedExecutable).parent.path}\\bin';
   static final _ytDlp = _resolve('yt-dlp');
   static final _ffmpeg = _resolve('ffmpeg');
-  static const _utf8Env = {'PYTHONUTF8': '1', 'PYTHONIOENCODING': 'utf-8'};
 
   static String _resolve(String name) {
     final local = '$_binDir\\$name.exe';
@@ -31,6 +30,8 @@ class YtDlp {
 
   static List<String> get _commonArgs => [
         '--no-playlist',
+        // Without this, yt-dlp prints in the Windows ANSI codepage and accented titles break UTF-8 decoding.
+        '--encoding', 'utf-8',
         // Deno is yt-dlp's default JS runtime; also allow Node, which is more commonly installed.
         '--js-runtimes', 'deno', '--js-runtimes', 'node',
         if (_ffmpeg != 'ffmpeg') ...['--ffmpeg-location', _ffmpeg],
@@ -41,7 +42,6 @@ class YtDlp {
     final result = await Process.run(
       _ytDlp,
       [..._commonArgs, '-J', url],
-      environment: _utf8Env,
       stdoutEncoding: utf8,
       stderrEncoding: utf8,
     );
@@ -94,7 +94,6 @@ class YtDlp {
         '--print', 'after_move:filepath',
         url,
       ],
-      environment: _utf8Env,
     );
 
     String? path;
@@ -120,6 +119,9 @@ class YtDlp {
   }
 
   static Future<void> showInFolder(String path) => Process.start('explorer.exe', ['/select,', path]);
+
+  /// Opens the file with its default Windows app.
+  static Future<void> open(String path) => Process.start('explorer.exe', [path]);
 }
 
 class YtDlpException implements Exception {
