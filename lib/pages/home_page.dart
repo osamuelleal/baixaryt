@@ -1,6 +1,7 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:forui/forui.dart';
 
 import '../components/molecules/format_picker.dart';
 import '../components/molecules/url_input.dart';
@@ -68,13 +69,22 @@ class _HomePageState extends State<HomePage> {
           onProgress: (p) => setState(() => _progress = p));
       setState(() => _savedPath = path);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        behavior: SnackBarBehavior.floating,
-        width: 560,
+      showFToast(
+        context: context,
+        icon: const Icon(FLucideIcons.circleCheck),
+        title: const Text('Download concluído!'),
+        description: const Text('O arquivo está na pasta Downloads.'),
         duration: const Duration(seconds: 8),
-        content: const Text('Download concluído! O arquivo está na pasta Downloads.'),
-        action: SnackBarAction(label: 'Abrir', onPressed: () => YtDlp.open(path)),
-      ));
+        suffixBuilder: (context, entry) => FButton(
+          size: .sm,
+          mainAxisSize: .min,
+          onPress: () {
+            YtDlp.open(path);
+            entry.dismiss();
+          },
+          child: const Text('Abrir'),
+        ),
+      );
     });
     setState(() => _progress = null);
   }
@@ -82,21 +92,30 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final info = _info;
-    return Scaffold(
-      body: Center(
+    final progress = _progress;
+    final muted = context.theme.typography.body.sm.copyWith(color: context.theme.colors.mutedForeground);
+    return FScaffold(
+      header: FHeader(
+        title: const Text('BaixarYT'),
+        suffixes: [
+          FHeaderAction(
+            icon: const Icon(FLucideIcons.folderOpen),
+            semanticsLabel: 'Abrir pasta Downloads',
+            onPress: () => YtDlp.open(YtDlp.downloadsDir),
+          ),
+        ],
+      ),
+      child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 760),
           child: ListView(
             shrinkWrap: true,
-            padding: const EdgeInsets.all(24),
             children: [
-              Text('BaixarYT', style: Theme.of(context).textTheme.headlineMedium),
-              const SizedBox(height: 24),
               UrlInput(controller: _url, enabled: !_busy, onSubmit: _fetch),
-              if (_loading) ...[const SizedBox(height: 16), const LinearProgressIndicator()],
+              if (_loading) ...[const SizedBox(height: 16), const FProgress()],
               if (_error != null) ...[
                 const SizedBox(height: 16),
-                Text(_error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                FAlert(variant: .destructive, title: const Text('Algo deu errado'), subtitle: Text(_error!)),
               ],
               if (info != null) ...[
                 const SizedBox(height: 24),
@@ -113,33 +132,42 @@ class _HomePageState extends State<HomePage> {
                   }),
                 ),
                 const SizedBox(height: 24),
-                if (_progress != null)
-                  Column(children: [
-                    LinearProgressIndicator(value: _progress! >= 1 ? null : _progress),
-                    const SizedBox(height: 8),
-                    Text(_progress! >= 1 ? 'Finalizando...' : 'Baixando ${(_progress! * 100).toStringAsFixed(0)}%'),
-                  ])
-                else
-                  FilledButton.icon(
-                    onPressed: _download,
-                    icon: const Icon(Icons.download),
-                    label: const Text('Baixar'),
-                    style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52)),
-                  ),
+                if (progress != null) ...[
+                  if (progress >= 1) const FProgress() else FDeterminateProgress(value: progress.clamp(0, 1)),
+                  const SizedBox(height: 8),
+                  Text(progress >= 1 ? 'Finalizando...' : 'Baixando ${(progress * 100).toStringAsFixed(0)}%',
+                      style: muted, textAlign: TextAlign.center),
+                ] else
+                  FButton(onPress: _download, prefix: const Icon(FLucideIcons.download), child: const Text('Baixar')),
               ],
               if (_savedPath != null) ...[
                 const SizedBox(height: 16),
-                ListTile(
-                  leading: const Icon(Icons.check_circle, color: Colors.green),
-                  title: const Text('Download concluído'),
-                  subtitle: Text(_savedPath!),
-                  trailing: Wrap(spacing: 8, children: [
-                    TextButton(onPressed: () => YtDlp.open(_savedPath!), child: const Text('Abrir')),
-                    TextButton(
-                      onPressed: () => YtDlp.showInFolder(_savedPath!),
-                      child: const Text('Mostrar na pasta'),
-                    ),
-                  ]),
+                FCard(
+                  child: Row(
+                    children: [
+                      const Icon(FLucideIcons.circleCheck),
+                      const SizedBox(width: 12),
+                      Expanded(child: Text(_savedPath!, style: muted, overflow: TextOverflow.ellipsis)),
+                      const SizedBox(width: 12),
+                      FButton(
+                        variant: .outline,
+                        size: .sm,
+                        mainAxisSize: .min,
+                        prefix: const Icon(FLucideIcons.play),
+                        onPress: () => YtDlp.open(_savedPath!),
+                        child: const Text('Abrir'),
+                      ),
+                      const SizedBox(width: 8),
+                      FButton(
+                        variant: .outline,
+                        size: .sm,
+                        mainAxisSize: .min,
+                        prefix: const Icon(FLucideIcons.folder),
+                        onPress: () => YtDlp.showInFolder(_savedPath!),
+                        child: const Text('Mostrar na pasta'),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ],

@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:forui/forui.dart';
 
 import '../../models/video_info.dart';
 
@@ -16,39 +17,41 @@ class VideoPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final text = Theme.of(context).textTheme;
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 240,
-            child: AspectRatio(
-              aspectRatio: 16 / 9,
-              child: Image.network(
-                info.thumbnail,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => const Center(child: Icon(Icons.image_not_supported)),
+    return FCard(
+      builder: (context, style, _) => Padding(
+        padding: style.padding,
+        child: Row(
+          crossAxisAlignment: .start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: SizedBox(
+                width: 200,
+                child: AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: Image.network(
+                    info.thumbnail,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, _, _) => const Center(child: Icon(FLucideIcons.imageOff)),
+                  ),
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
+            const SizedBox(width: 16),
+            Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: .start,
                 children: [
-                  Text(info.title, style: text.titleMedium, maxLines: 2, overflow: TextOverflow.ellipsis),
+                  Text(info.title, style: style.titleTextStyle, maxLines: 2, overflow: TextOverflow.ellipsis),
                   const SizedBox(height: 4),
-                  Text(info.author, style: text.bodyMedium),
+                  Text(info.author, style: style.subtitleTextStyle),
                   const SizedBox(height: 4),
-                  Text(_duration, style: text.bodySmall),
+                  Text(_duration, style: style.subtitleTextStyle),
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

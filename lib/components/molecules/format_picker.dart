@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:forui/forui.dart';
 
 import '../../services/yt_dlp.dart';
 
@@ -21,32 +22,34 @@ class FormatPicker extends StatelessWidget {
   static List<int> qualitiesFor(OutputFormat format, List<int> heights) =>
       format == OutputFormat.mp4 ? heights : mp3Bitrates;
 
+  // Forui has no segmented control: the selected option is a primary button, the other an outline one.
+  Widget _option(OutputFormat value, String label, IconData icon) => FButton(
+        variant: format == value ? .primary : .outline,
+        mainAxisSize: .min,
+        prefix: Icon(icon),
+        onPress: enabled && (value == OutputFormat.mp3 || heights.isNotEmpty)
+            ? () => onChanged(value, qualitiesFor(value, heights).first)
+            : null,
+        child: Text(label),
+      );
+
   @override
   Widget build(BuildContext context) {
-    final qualities = qualitiesFor(format, heights);
     return Row(
       children: [
-        SegmentedButton<OutputFormat>(
-          segments: [
-            ButtonSegment(
-              value: OutputFormat.mp4,
-              label: const Text('MP4 (vídeo)'),
-              icon: const Icon(Icons.movie),
-              enabled: heights.isNotEmpty,
-            ),
-            const ButtonSegment(value: OutputFormat.mp3, label: Text('MP3 (áudio)'), icon: Icon(Icons.music_note)),
-          ],
-          selected: {format},
-          onSelectionChanged: enabled ? (s) => onChanged(s.first, qualitiesFor(s.first, heights).first) : null,
-        ),
+        _option(OutputFormat.mp4, 'MP4 (vídeo)', FLucideIcons.film),
+        const SizedBox(width: 8),
+        _option(OutputFormat.mp3, 'MP3 (áudio)', FLucideIcons.music),
         const SizedBox(width: 16),
-        DropdownButton<int>(
-          value: quality,
-          onChanged: enabled ? (q) => onChanged(format, q!) : null,
-          items: [
-            for (final q in qualities)
-              DropdownMenuItem(value: q, child: Text(format == OutputFormat.mp4 ? '${q}p' : '$q kbps')),
-          ],
+        SizedBox(
+          width: 160,
+          child: FSelect<int>(
+            enabled: enabled,
+            items: {
+              for (final q in qualitiesFor(format, heights)) format == OutputFormat.mp4 ? '${q}p' : '$q kbps': q,
+            },
+            control: .lifted(value: quality, onChange: (q) => q == null ? null : onChanged(format, q)),
+          ),
         ),
       ],
     );

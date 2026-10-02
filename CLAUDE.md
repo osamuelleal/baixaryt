@@ -17,7 +17,7 @@ flutter test test/yt_dlp_test.dart --name parsePercent   # single test
 
 ## External binaries
 
-- Put `yt-dlp.exe`, `ffmpeg.exe` and `ffprobe.exe` in `<project>/bin/` (gitignored). They must be there when building the installer: an installed app launched by Setup's "Run" checkbox may not see the user's PATH, so the installer has to ship ffmpeg itself. A rule appended to `windows/CMakeLists.txt` copies that folder next to the built `.exe`, so `flutter run` and release builds both get them.
+- Put `yt-dlp.exe`, `ffmpeg.exe` and `ffprobe.exe` (gyan.dev *essentials* build, ~105 MB each, much smaller than *full*) in `<project>/bin/` (gitignored). They must be there when building the installer: an installed app launched by Setup's "Run" checkbox may not see the user's PATH, so the installer has to ship ffmpeg itself. A rule appended to `windows/CMakeLists.txt` copies that folder next to the built `.exe`, so `flutter run` and release builds both get them.
 - `YtDlp` (`lib/services/yt_dlp.dart`) resolves each binary from `<exe dir>\bin\`, falling back to PATH. If `ffmpeg` comes from PATH, `--ffmpeg-location` is omitted.
 - `YtDlp.updated` runs `yt-dlp -U` once at launch; every yt-dlp call awaits it. This is why the installer (`installer/baixaryt.iss`, Inno Setup) installs per-user: the bundled exe must stay writable. Bump `AppVersion` there along with `pubspec.yaml`.
 - Recent yt-dlp versions need a JS runtime for full YouTube support; the app enables Deno and Node (`--js-runtimes`). Without either, formats go missing.
@@ -29,6 +29,10 @@ flutter test test/yt_dlp_test.dart --name parsePercent   # single test
   - `download` streams stdout. The `--progress-template` lines are progress. The single `--print after_move:filepath` line is the final saved path. Progress restarts for each stream (video, then audio), and the post-processing step reports nothing, which the UI shows as "Finalizando...".
   - Format selection lives in `formatArgs`: MP4 = `-S res:<h>,vcodec:h264,ext:mp4:m4a` (H.264 for player compatibility when available); MP3 = `-x --audio-format mp3` plus embedded metadata and thumbnail.
   - Files are saved to `%USERPROFILE%\Downloads`.
+- UI is built with **Forui** (shadcn-style, `FTheme.neutral` light/dark following Windows) on Flutter 3.47+. Forui 0.26+ requires Flutter ≥3.47, and its source uses dot-shorthands (`.primary`, `.min`).
+  - Material now lives in the `material_ui` package; import `package:material_ui/material_ui.dart` (not `flutter/material.dart`) where Material is needed (only `MaterialApp` in `main.dart`).
+  - Forui has no segmented control: the MP4/MP3 choice is two `FButton`s (selected = `.primary`, other = `.outline`). `FSelect` items map **label → value**; the lifted value must exist in the map.
+  - `showFToast` needs the `FToaster` set up in `MaterialApp.builder`.
 - UI follows Atomic Design: `lib/components/molecules/*` are stateless and prop-driven. `lib/pages/home_page.dart` owns all state (fetch → preview → pick format → download → "Mostrar na pasta").
 - The app icon (`windows/runner/resources/app_icon.ico`) is an original design; never use the YouTube logo.
 - yt-dlp is always called with `--encoding utf-8`; otherwise it prints in the Windows ANSI codepage and accented titles break UTF-8 decoding (`FormatException`).

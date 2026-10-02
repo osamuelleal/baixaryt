@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:forui/forui.dart';
 
 import 'pages/home_page.dart';
 import 'services/yt_dlp.dart';
@@ -16,9 +17,18 @@ class BaixarYtApp extends StatelessWidget {
     return MaterialApp(
       title: 'BaixarYT',
       debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.system,
-      theme: ThemeData(colorSchemeSeed: Colors.red),
-      darkTheme: ThemeData(colorSchemeSeed: Colors.red, brightness: Brightness.dark),
+      locale: const Locale('pt', 'BR'),
+      localizationsDelegates: FLocalizations.localizationsDelegates,
+      supportedLocales: FLocalizations.supportedLocales,
+      theme: FTheme.neutral.light.desktop.toApproximateMaterialTheme(),
+      darkTheme: FTheme.neutral.dark.desktop.toApproximateMaterialTheme(),
+      // Follows the Windows light/dark setting.
+      builder: (context, child) => FTheme(
+        data: MediaQuery.platformBrightnessOf(context) == Brightness.dark
+            ? FTheme.neutral.dark.desktop
+            : FTheme.neutral.light.desktop,
+        child: FToaster(child: child!),
+      ),
       home: const HomePage(),
     );
   }

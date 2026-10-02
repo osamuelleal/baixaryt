@@ -4,10 +4,10 @@
 
 **Download YouTube and YouTube Music as MP4 or MP3: paste, pick, done.**
 
-A small Windows desktop app built with Flutter, powered by [yt-dlp](https://github.com/yt-dlp/yt-dlp) and [FFmpeg](https://ffmpeg.org/).
+A small Windows desktop app built with Flutter and [Forui](https://forui.dev), powered by [yt-dlp](https://github.com/yt-dlp/yt-dlp) and [FFmpeg](https://ffmpeg.org/).
 
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0078D6?logo=windows)
-![Flutter](https://img.shields.io/badge/Flutter-3.27-02569B?logo=flutter)
+![Flutter](https://img.shields.io/badge/Flutter-3.47-02569B?logo=flutter)
 ![yt-dlp](https://img.shields.io/badge/powered%20by-yt--dlp-red)
 
 </div>
@@ -32,9 +32,9 @@ Files are saved to your **Downloads** folder.
 |------|-----|
 | Windows 10 or 11 (x64) | Target platform |
 | [`yt-dlp.exe`](https://github.com/yt-dlp/yt-dlp/releases/latest) | Fetches video info and downloads streams |
-| [`ffmpeg.exe` + `ffprobe.exe`](https://www.gyan.dev/ffmpeg/builds/) | Merges video and audio, converts to MP3 |
+| [`ffmpeg.exe` + `ffprobe.exe`](https://www.gyan.dev/ffmpeg/builds/) (the *essentials* build is enough) | Merges video and audio, converts to MP3 |
 | [Node.js](https://nodejs.org/) **or** [Deno](https://deno.com/) | yt-dlp needs a JS runtime to see every YouTube format |
-| [Flutter](https://docs.flutter.dev/get-started/install/windows/desktop) + Visual Studio (C++ desktop workload) | Building from source only |
+| [Flutter 3.47+](https://docs.flutter.dev/get-started/install/windows/desktop) + Visual Studio (C++ desktop workload) | Building from source only |
 
 The app looks for `yt-dlp.exe` and `ffmpeg.exe` in a `bin\` folder next to `baixaryt.exe` first, then on your `PATH`.
 

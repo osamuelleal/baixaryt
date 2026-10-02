@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:forui/forui.dart';
 
 class UrlInput extends StatelessWidget {
   final TextEditingController controller;
@@ -12,24 +13,22 @@ class UrlInput extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: TextField(
-            controller: controller,
+          child: FTextField(
+            control: .managed(controller: controller),
+            hint: 'Cole o link do YouTube ou YouTube Music',
             enabled: enabled,
             autofocus: true,
-            onSubmitted: (_) => onSubmit(),
-            decoration: const InputDecoration(
-              hintText: 'Cole o link do YouTube ou YouTube Music',
-              prefixIcon: Icon(Icons.link),
-              border: OutlineInputBorder(),
-            ),
+            onSubmit: (_) => onSubmit(),
+            prefixBuilder: (context, style, variants) =>
+                FTextField.prefixIconBuilder(context, style, variants, const Icon(FLucideIcons.link)),
           ),
         ),
-        const SizedBox(width: 12),
-        FilledButton.icon(
-          onPressed: enabled ? onSubmit : null,
-          icon: const Icon(Icons.search),
-          label: const Text('Buscar'),
-          style: FilledButton.styleFrom(minimumSize: const Size(0, 56)),
+        const SizedBox(width: 8),
+        FButton(
+          onPress: enabled ? onSubmit : null,
+          mainAxisSize: .min,
+          prefix: const Icon(FLucideIcons.search),
+          child: const Text('Buscar'),
         ),
       ],
     );
