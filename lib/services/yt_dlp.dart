@@ -25,6 +25,8 @@ class YtDlp {
 
   static List<String> get _commonArgs => [
         '--no-playlist',
+        // Deno is yt-dlp's default JS runtime; also allow Node, which is more commonly installed.
+        '--js-runtimes', 'deno', '--js-runtimes', 'node',
         if (_ffmpeg != 'ffmpeg') ...['--ffmpeg-location', _ffmpeg],
       ];
 
@@ -41,7 +43,7 @@ class YtDlp {
   }
 
   static List<String> formatArgs(OutputFormat format, int quality) => switch (format) {
-        OutputFormat.mp4 => ['-f', 'bv*+ba/b', '-S', 'res:$quality,ext:mp4:m4a', '--merge-output-format', 'mp4'],
+        OutputFormat.mp4 => ['-f', 'bv*+ba/b', '-S', 'res:$quality,vcodec:h264,ext:mp4:m4a', '--merge-output-format', 'mp4'],
         OutputFormat.mp3 => [
             '-x', '--audio-format', 'mp3', '--audio-quality', '${quality}K',
             '--embed-metadata', '--embed-thumbnail',
