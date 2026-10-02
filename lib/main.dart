@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'pages/home_page.dart';
+import 'services/yt_dlp.dart';
 
-void main() => runApp(const BaixarYtApp());
+void main() {
+  YtDlp.updated; // kick off the yt-dlp self-update in the background
+  runApp(const BaixarYtApp());
+}
 
 class BaixarYtApp extends StatelessWidget {
   const BaixarYtApp({super.key});

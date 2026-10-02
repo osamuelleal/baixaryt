@@ -21,6 +21,7 @@ A small Windows desktop app built with Flutter, powered by [yt-dlp](https://gith
 - 🎞️ **MP4 video**: choose from the resolutions actually available for that video. H.264 is preferred, so files play in any Windows player.
 - 🎵 **MP3 audio**: 320 / 256 / 192 / 128 kbps, with title, artist and cover art embedded.
 - 📊 **Live progress**, plus a one-click **"Show in folder"** button when the download finishes.
+- 🔄 **Keeps itself working**: yt-dlp updates itself in the background every time the app starts.
 - 🌗 Light and dark theme that follows your Windows setting.
 
 Files are saved to your **Downloads** folder.
@@ -53,7 +54,15 @@ flutter run -d windows
 
 The build automatically copies `bin\` next to the executable.
 
-### Build a release
+### Install it like a regular app
+
+```powershell
+powershell -ExecutionPolicy Bypass -File install.ps1
+```
+
+This builds a release, installs it to `%LOCALAPPDATA%\Programs\BaixarYT` (no admin needed), and adds **Start Menu** and **Desktop** shortcuts. Run it again to update. Add `-Uninstall` to remove it.
+
+### Build a release manually
 
 ```bash
 flutter build windows --release
@@ -77,7 +86,7 @@ flutter test
 
 All yt-dlp interaction lives in `lib/services/yt_dlp.dart`. The UI follows Atomic Design (`lib/components/molecules`, `lib/pages`).
 
-**Tip:** if downloads start failing, YouTube probably changed something. Update yt-dlp first: `bin\yt-dlp.exe -U`.
+**Tip:** if downloads start failing, YouTube probably changed something. The app updates yt-dlp on every launch, so try reopening it first.
 
 ## ⚖️ Disclaimer
 

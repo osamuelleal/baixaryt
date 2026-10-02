@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.baixaryt" "\0"
-            VALUE "FileDescription", "baixaryt" "\0"
+            VALUE "CompanyName", "osamuelleal" "\0"
+            VALUE "FileDescription", "BaixarYT" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "baixaryt" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2026 com.baixaryt. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 osamuelleal. All rights reserved." "\0"
             VALUE "OriginalFilename", "baixaryt.exe" "\0"
-            VALUE "ProductName", "baixaryt" "\0"
+            VALUE "ProductName", "BaixarYT" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

@@ -20,6 +20,12 @@ class YtDlp {
     return File(local).existsSync() ? local : name;
   }
 
+  /// Self-update of yt-dlp (YouTube breaks old versions often). Started once at app launch;
+  /// every yt-dlp call waits for it so the exe is never replaced mid-run. Failures are ignored.
+  static final Future<void> updated = Process.run(_ytDlp, ['-U'])
+      .timeout(const Duration(seconds: 60))
+      .then<void>((_) {}, onError: (_) {});
+
   // ponytail: assumes the default Downloads location; add a folder picker if users relocate it.
   static String get downloadsDir => '${Platform.environment['USERPROFILE']}\\Downloads';
 
@@ -31,6 +37,7 @@ class YtDlp {
       ];
 
   static Future<VideoInfo> fetchInfo(String url) async {
+    await updated;
     final result = await Process.run(
       _ytDlp,
       [..._commonArgs, '-J', url],
@@ -74,6 +81,7 @@ class YtDlp {
     int quality,
     void Function(double) onProgress,
   ) async {
+    await updated;
     final process = await Process.start(
       _ytDlp,
       [
