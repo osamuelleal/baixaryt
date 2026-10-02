@@ -9,7 +9,7 @@ BaixarYT: a Flutter **Windows-only** desktop app that downloads YouTube / YouTub
 ```bash
 flutter run -d windows                         # run in debug
 flutter build windows --release                # output: build/windows/x64/runner/Release/
-powershell -ExecutionPolicy Bypass -File install.ps1   # build + install to %LOCALAPPDATA%\Programs\BaixarYT with shortcuts (-Uninstall)
+"$LOCALAPPDATA/Programs/Inno Setup 6/ISCC.exe" installer/baixaryt.iss   # after a release build -> dist/BaixarYT-Setup-<ver>.exe
 flutter analyze
 flutter test                                   # all tests
 flutter test test/yt_dlp_test.dart --name parsePercent   # single test
@@ -19,7 +19,7 @@ flutter test test/yt_dlp_test.dart --name parsePercent   # single test
 
 - Put `yt-dlp.exe` and `ffmpeg.exe` in `<project>/bin/` (gitignored). A rule appended to `windows/CMakeLists.txt` copies that folder next to the built `.exe`, so `flutter run` and release builds both get them.
 - `YtDlp` (`lib/services/yt_dlp.dart`) resolves each binary from `<exe dir>\bin\`, falling back to PATH. If `ffmpeg` comes from PATH, `--ffmpeg-location` is omitted.
-- `YtDlp.updated` runs `yt-dlp -U` once at launch; every yt-dlp call awaits it. This is why the app installs per-user: the bundled exe must stay writable.
+- `YtDlp.updated` runs `yt-dlp -U` once at launch; every yt-dlp call awaits it. This is why the installer (`installer/baixaryt.iss`, Inno Setup) installs per-user: the bundled exe must stay writable. Bump `AppVersion` there along with `pubspec.yaml`.
 - Recent yt-dlp versions need a JS runtime for full YouTube support; the app enables Deno and Node (`--js-runtimes`). Without either, formats go missing.
 
 ## Architecture

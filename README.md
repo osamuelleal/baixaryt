@@ -54,15 +54,18 @@ flutter run -d windows
 
 The build automatically copies `bin\` next to the executable.
 
-### Install it like a regular app
+### Build the installer
 
-```powershell
-powershell -ExecutionPolicy Bypass -File install.ps1
+Requires [Inno Setup 6](https://jrsoftware.org/isinfo.php) (`winget install JRSoftware.InnoSetup`).
+
+```bash
+flutter build windows --release
+iscc installer\baixaryt.iss
 ```
 
-This builds a release, installs it to `%LOCALAPPDATA%\Programs\BaixarYT` (no admin needed), and adds **Start Menu** and **Desktop** shortcuts. Run it again to update. Add `-Uninstall` to remove it.
+This produces `dist\BaixarYT-Setup-<version>.exe`, a regular Windows installer. It installs per-user (no admin needed), adds Start Menu and optional Desktop shortcuts, and registers an uninstaller under **Settings → Apps**.
 
-### Build a release manually
+### Portable build
 
 ```bash
 flutter build windows --release

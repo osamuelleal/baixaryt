@@ -46,3 +46,6 @@ app.*.map.json
 
 # yt-dlp.exe / ffmpeg.exe (not versioned)
 /bin/
+
+# Installer output
+/dist/
