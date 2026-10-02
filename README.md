@@ -32,7 +32,7 @@ Files are saved to your **Downloads** folder.
 |------|-----|
 | Windows 10 or 11 (x64) | Target platform |
 | [`yt-dlp.exe`](https://github.com/yt-dlp/yt-dlp/releases/latest) | Fetches video info and downloads streams |
-| [`ffmpeg.exe`](https://www.gyan.dev/ffmpeg/builds/) | Merges video and audio, converts to MP3 |
+| [`ffmpeg.exe` + `ffprobe.exe`](https://www.gyan.dev/ffmpeg/builds/) | Merges video and audio, converts to MP3 |
 | [Node.js](https://nodejs.org/) **or** [Deno](https://deno.com/) | yt-dlp needs a JS runtime to see every YouTube format |
 | [Flutter](https://docs.flutter.dev/get-started/install/windows/desktop) + Visual Studio (C++ desktop workload) | Building from source only |
 
@@ -47,7 +47,7 @@ cd baixaryt
 # Drop the binaries into bin/ (it's gitignored)
 mkdir bin
 curl -L -o bin/yt-dlp.exe https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe
-# ...and copy ffmpeg.exe into bin/ as well (or have it on PATH)
+# ...and copy ffmpeg.exe + ffprobe.exe into bin/ as well (or have them on PATH)
 
 flutter run -d windows
 ```
@@ -63,7 +63,7 @@ flutter build windows --release
 iscc installer\baixaryt.iss
 ```
 
-This produces `dist\BaixarYT-Setup-<version>.exe`, a regular Windows installer. It installs per-user (no admin needed), adds Start Menu and optional Desktop shortcuts, and registers an uninstaller under **Settings → Apps**.
+This produces `dist\BaixarYT-Setup-<version>.exe`, a regular Windows installer. It installs per-user (no admin needed), adds Start Menu and optional Desktop shortcuts, and registers an uninstaller under **Settings → Apps**. Everything in `bin\` (yt-dlp, ffmpeg, ffprobe) ships inside the installer, so the installed app doesn't depend on `PATH`.
 
 ### Portable build
 

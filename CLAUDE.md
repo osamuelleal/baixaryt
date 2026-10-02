@@ -17,7 +17,7 @@ flutter test test/yt_dlp_test.dart --name parsePercent   # single test
 
 ## External binaries
 
-- Put `yt-dlp.exe` and `ffmpeg.exe` in `<project>/bin/` (gitignored). A rule appended to `windows/CMakeLists.txt` copies that folder next to the built `.exe`, so `flutter run` and release builds both get them.
+- Put `yt-dlp.exe`, `ffmpeg.exe` and `ffprobe.exe` in `<project>/bin/` (gitignored). They must be there when building the installer: an installed app launched by Setup's "Run" checkbox may not see the user's PATH, so the installer has to ship ffmpeg itself. A rule appended to `windows/CMakeLists.txt` copies that folder next to the built `.exe`, so `flutter run` and release builds both get them.
 - `YtDlp` (`lib/services/yt_dlp.dart`) resolves each binary from `<exe dir>\bin\`, falling back to PATH. If `ffmpeg` comes from PATH, `--ffmpeg-location` is omitted.
 - `YtDlp.updated` runs `yt-dlp -U` once at launch; every yt-dlp call awaits it. This is why the installer (`installer/baixaryt.iss`, Inno Setup) installs per-user: the bundled exe must stay writable. Bump `AppVersion` there along with `pubspec.yaml`.
 - Recent yt-dlp versions need a JS runtime for full YouTube support; the app enables Deno and Node (`--js-runtimes`). Without either, formats go missing.
