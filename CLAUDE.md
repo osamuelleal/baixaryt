@@ -29,3 +29,11 @@ flutter test test/yt_dlp_test.dart --name parsePercent   # single test
   - Files are saved to `%USERPROFILE%\Downloads`.
 - UI follows Atomic Design: `lib/components/molecules/*` are stateless and prop-driven. `lib/pages/home_page.dart` owns all state (fetch → preview → pick format → download → "Mostrar na pasta").
 - Output is forced to UTF-8 with the `PYTHONUTF8` environment variable, so non-ASCII titles and paths decode correctly.
+
+## GitHub account (mandatory)
+
+- This is a **personal** project: use **only** the `osamuelleal` GitHub account. Remote: `https://github.com/osamuelleal/baixaryt`.
+- **Never** create, push to, comment on or otherwise touch anything under the company account `samuelnestveterinary` or any Nest org/repo.
+- The machine's active `gh` account is the Nest one; **do not run `gh auth switch`**. Instead, scope each gh command to the personal account: `GH_TOKEN=$(gh auth token --user osamuelleal) gh ...`.
+- `git push`/`fetch` already use the personal account through a repo-local credential helper in `.git/config` (it calls `gh auth token --user osamuelleal`). Commit author is pinned locally to `osamuelleal <samuelleal1997@gmail.com>`.
+- Before any GitHub action, confirm the account with `GH_TOKEN=$(gh auth token --user osamuelleal) gh api user --jq .login` → must print `osamuelleal`.
